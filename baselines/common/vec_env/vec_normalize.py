@@ -2,7 +2,6 @@ from . import VecEnvWrapper
 from baselines.common.running_mean_std import RunningMeanStd, TfRunningMeanStd
 import numpy as np
 import pickle
-from baselines.common.structure_mapper import map_transfer_env_running_mean
 
 
 class VecNormalize(VecEnvWrapper):

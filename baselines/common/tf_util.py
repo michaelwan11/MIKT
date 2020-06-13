@@ -6,7 +6,6 @@ import os
 import functools
 import collections
 import multiprocessing
-from baselines.common.structure_mapper import map_input, map_output
 
 def switch(condition, then_expression, else_expression):
     """Switches between two operations depending on a scalar value (int or bool).
@@ -370,21 +369,6 @@ def load_variables_for_transfer(variables=None, loaded_params=None, sess=None,
             if np.prod(v.get_shape().as_list()) != np.prod(d.shape):
                 if transfer == 'raw_transfer':
                     print('Skipping variable', v.name)
-                else:
-                    # pi_out, logstd, vf_out
-                    if 'pi_out' in v.name or 'logstd' in v.name or 'vf_out' in v.name:
-                        added_constant = 0.0
-                        new_value = map_output(
-                            transfer_env, d, 0.0, gnn_option_list
-                        )
-                        restores.append(v.assign(new_value))
-                        print(v.name)
-                    elif 'fc0/w' in v.name:
-                        new_value = map_input(
-                            transfer_env, d, 0.0, gnn_option_list
-                        )
-                        restores.append(v.assign(new_value))
-                        print(v.name)
             else:
                 print(v.name)
                 restores.append(v.assign(d))
@@ -394,21 +378,6 @@ def load_variables_for_transfer(variables=None, loaded_params=None, sess=None,
             if np.prod(v.get_shape().as_list()) != np.prod(d.shape):
                 if transfer == 'raw_transfer':
                     print('Skipping variable', v.name)
-                else:
-                    # pi_out, logstd, vf_out
-                    if 'pi_out' in v.name or 'logstd' in v.name or 'vf_out' in v.name:
-                        added_constant = 0.0
-                        new_value = map_output(
-                            transfer_env, d, 0.0, gnn_option_list
-                        )
-                        restores.append(v.assign(new_value))
-                        print(v.name)
-                    elif 'fc0/w' in v.name:
-                        new_value = map_input(
-                            transfer_env, d, 0.0, gnn_option_list
-                        )
-                        restores.append(v.assign(new_value))
-                        print(v.name)
             else:
                 print(v.name)
                 restores.append(v.assign(d))
@@ -432,7 +401,6 @@ def load_variables(load_path, variables=None, sess=None, transfer=None,
             print(v.name)
             restores.append(v.assign(d))
     else:
-        print(loaded_params)
         for v in variables:
             print(v.name)
             restores.append(v.assign(loaded_params[v.name]))
